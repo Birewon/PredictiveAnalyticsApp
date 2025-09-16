@@ -56,7 +56,7 @@
      <attribute name="title">
       <string>Edit CSV</string>
      </attribute>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>442</x>
@@ -292,7 +292,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="">
+     <widget class="QWidget" name="layoutWidget">
       <property name="geometry">
        <rect>
         <x>11</x>
@@ -485,7 +485,7 @@
             <enum>Qt::ScrollBarAlwaysOff</enum>
            </property>
            <property name="placeholderText">
-            <string>some_file.csv</string>
+            <string>some_filename</string>
            </property>
           </widget>
          </item>

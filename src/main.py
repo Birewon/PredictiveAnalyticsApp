@@ -25,6 +25,8 @@ class mywindow(QtWidgets.QMainWindow):
         self.ui.attach_btn_2.clicked.connect(self.callbacks.attach_file_2)
         self.ui.attach_btn_3.clicked.connect(self.callbacks.output_pth)
         self.ui.result_button.clicked.connect(self.callbacks.concat)
+        self.ui.sort_btn.clicked.connect(self.callbacks.sort)
+        self.ui.listWidget_1
 
     # Functions working with globals variables
     def add_df(self, new_df: pd.DataFrame):

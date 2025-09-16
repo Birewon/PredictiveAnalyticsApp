@@ -82,11 +82,18 @@ class UICallbacks:
         dir_name = QFileDialog.getExistingDirectory(self.main_window, "Select a Directory")
         output_path = str(dir_name)
         if output_path:
-            if len(self.main_window.dfs) == 2:
+            if len(self.main_window.dfs) != 2:
                 self.main_window.ui.path_text_3.setPlainText(output_path)
                 self.main_window.set_output_path(output_path)
                 return
-        self.main_window.ui.path_text_3.setPlainText("Error!")
+            else:
+                self.main_window.dfs.clear()
+                self.main_window.update_response_text("[ATTENTION]: maximum number of files execeeded! The memory has been reset!")
+                self.main_window.set_output_path(output_path)
+                self.print_status_text()
+                return
+        self.main_window.update_response_text(f"[ERROR]: output_path: {output_path}")
+        self.print_status_text()
 
     def concat(self):
         try:
@@ -97,6 +104,34 @@ class UICallbacks:
             self.print_status_text()
         except ValueError as ex:
             self.main_window.update_response_text(f"[ERROR]: {ex}")
+            self.print_status_text()
+
+    def check_columns_bar(self, list_widget: QtWidgets.QListWidget):
+        checked_list = []
+        for i in range(list_widget.count()):
+            item = list_widget.item(i)
+            if item.checkState() == QtCore.Qt.Checked:
+                checked_list.append(item.text())
+        return checked_list
+
+    def sort(self):
+        df = self.main_window.dfs[0] # take first df
+        columns = self.check_columns_bar(self.main_window.ui.listWidget_1) # get columns from df
+        output_path = self.main_window.OUTPUT_PATH # get output path
+        new_df = DataProcessing.sort_df(self.data_processor, df=df, by=columns, how_ascending=True) # SORT!!!!
+        if new_df.get("status") == 1: # if SORT if OK
+            status_text = "Successfuly!" # Logging
+            self.main_window.update_response_text(status_text) # Logging
+            self.print_status_text() # Logging
+            message = DataProcessing.save_dataframe_to_csv(self.data_processor, df=new_df.get("msg"), output_full_path=output_path, filename=self.main_window.ui.name_of_output_file_plain_text_1.toPlainText()) # SAVING NEW DF TO CSV !!
+            if message.get("status") == 1:
+                result_text = f"The file: {message.get("filename")} has sorted and saved in {output_path}" # Logging
+                self.main_window.update_response_text(result_text) # Logging
+            else:
+                self.main_window.update_response_text(message.get("msg"))
+            self.print_status_text()
+        else: # if SORT isn't OK
+            self.main_window.update_response_text(new_df.get("msg"))
             self.print_status_text()
 
     def print_status_text(self):
