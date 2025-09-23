@@ -17,39 +17,63 @@ class mywindow(QtWidgets.QMainWindow):
 
         self.callbacks = UICallbacks(self)
 
-        self.dfs = []
-        self.OUTPUT_PATH = ""
+        self.csv_path_1 = ""
+        self.csv_path_2 = ""
+        self.csv_output_path = ""
+        self.csv_output_name = ""
+
+        self.list_widget_csv_1 = None
+        self.list_widget_csv_2 = None
+
+        self.parameter_on = ""
+        self.parameter_how = ""
+        self.parameter_index = ""
+
         self.RESPONSE_TEXT = ""
 
         self.ui.attach_btn_1.clicked.connect(self.callbacks.attach_file_1)
         self.ui.attach_btn_2.clicked.connect(self.callbacks.attach_file_2)
         self.ui.attach_btn_3.clicked.connect(self.callbacks.output_pth)
-        self.ui.result_button.clicked.connect(self.callbacks.concat)
+        self.ui.concat_btn.clicked.connect(self.callbacks.concat)
         self.ui.sort_btn.clicked.connect(self.callbacks.sort)
-        self.ui.listWidget_1
+        self.ui.merge_btn.clicked.connect(self.callbacks.merge)
 
     # Functions working with globals variables
-    def add_df(self, new_df: pd.DataFrame):
+    def add_df(self, num_of_file: int, new_df: pd.DataFrame):
             """
-            Adding the df to the file to DFs list.
+            Adding the path to the file to path_df.
             Validating addition first and second files
 
             params:
 
-            new_path: str -> New path for addition to DFs list
+            new_path: str -> New path for addition to path_df
             """
-            if len(self.dfs) == 2:
-                self.dfs.clear()
+            if self.csv_path_1 and self.csv_path_2: # Validating of max. files
+                self.csv_path_1 = ""
+                self.csv_path_2 = ""
                 return {
                     "msg": "Error! Maximum files",
                     "status": 0
                 }
-            self.dfs.append(new_df)
-            return {
-                "new_df": new_df,
-                "DFs": self.dfs,
-                "status": 1
-            }
+            #==========Add new path to 1/2 file===========#
+            if num_of_file == 1:
+                self.csv_path_1 = new_df
+                return {
+                    "msg": f"The first file was selected: {new_df}",
+                    "status": 1
+                }
+            elif num_of_file == 2:
+                self.csv_path_2 = new_df
+                return {
+                    "msg": f"The second file was selected: {new_df}",
+                    "status": 1
+                }
+            else:
+                return {
+                     "msg": "add_df [ERROR]: Unknown error",
+                     "status": 0
+                }
+
 
     def set_output_path(self, output_path: str):
             """
