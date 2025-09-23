@@ -79,8 +79,8 @@ class mywindow(QtWidgets.QMainWindow):
             """
             Saving output path
             """
-            self.OUTPUT_PATH = output_path
-            return self.OUTPUT_PATH
+            self.csv_output_path = output_path
+            return output_path
 
     def update_response_text(self, response_text: str):
             """
