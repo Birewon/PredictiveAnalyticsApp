@@ -53,27 +53,27 @@ class SortWorker(QObject):
             try:
                 if self.path_to_csv_1 and self.list_widget_columns_1:
                     by_columns_1 = self._extract_columns(self.list_widget_columns_1)
+                    if by_columns_1:
+                        self._sort(
+                            path=self.path_to_csv_1,
+                            output_path=self.output_path,
+                            output_name=self.output_name+'_1',
+                            by=by_columns_1,
+                            ascending=self.how_ascending
+                        )
+                        self.status_update.emit('FIRST FILE SUCCESSFULY SORTED')
+
                 if self.path_to_csv_2 and self.list_widget_columns_2:
                     by_columns_2 = self._extract_columns(self.list_widget_columns_2)
-
-                if by_columns_1:
-                    self._sort(
-                        path=self.path_to_csv_1,
-                        output_path=self.output_path,
-                        output_name=self.output_name+'_1',
-                        by=by_columns_1,
-                        ascending=self.how_ascending
-                    )
-                    self.status_update.emit('FIRST FILE SUCCESSFULY SORTED')
-                if by_columns_2:
-                    self._sort(
-                        path=self.path_to_csv_2,
-                        output_path=self.output_path,
-                        output_name=self.output_name+'_2',
-                        by=by_columns_2,
-                        ascending=self.how_ascending
-                    )
-                    self.status_update.emit('SECOND FILE SUCCESSFULY SORTED')
+                    if by_columns_2:
+                        self._sort(
+                            path=self.path_to_csv_2,
+                            output_path=self.output_path,
+                            output_name=self.output_name+'_2',
+                            by=by_columns_2,
+                            ascending=self.how_ascending
+                        )
+                        self.status_update.emit('SECOND FILE SUCCESSFULY SORTED')
 
             except Exception as ex:
                 self.status_update.emit(f'[ERROR]: {ex}')

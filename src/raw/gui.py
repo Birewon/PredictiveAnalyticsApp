@@ -948,7 +948,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "========= TRAIN MODEL ========="))
         self.model_button_train.setText(_translate("MainWindow", "Train"))
         self.model_button_formula.setText(_translate("MainWindow", "Formula"))
-        self.model_plaintext_formula.setPlaceholderText(_translate("MainWindow", "Press \"Train\" for generate"))
+        self.model_plaintext_formula.setPlaceholderText(_translate("MainWindow", "Press \"Formula\" for generate"))
         self.model_button_output.setText(_translate("MainWindow", "Output path"))
         self.model_plaintext_output.setPlaceholderText(_translate("MainWindow", "~/Documents"))
         self.model_button_save_model.setText(_translate("MainWindow", "Save model"))
