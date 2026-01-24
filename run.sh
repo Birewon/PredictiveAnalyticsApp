@@ -37,27 +37,48 @@ else
 	response=${response^^}
 
 	if  [[ "$response" == "Y" ]]; then
-		echo "[*]: Updating..."
-		sudo apt update
-		echo "[+]: Done"
+		echo "[*]: Preparing system..."
+        sudo apt update
+        sudo apt install -y software-properties-common
 
-		printf "\n[*]: Installing python3.12\n"
 
-		sudo apt update -y
-		sudo apt upgrade -y
+		echo "[*]: Adding Python PPA..."
+        sudo add-apt-repository ppa:deadsnakes/ppa -y
+        sudo apt update -y
 
-		sudo apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5 xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+		PYTHON_VER="3.12"
 
-		wget https://www.python.org/ftp/python/3.12.1/Python-3.12.1.tgz
+		echo "[*]: Installing Python 3.12..."
+        if ! sudo apt install -y python3.12 python3.12-venv python3.12-dev; then
+            echo "[-] CRITICAL ERROR: Python 3.12 is not available."
+			echo ""
+			response=""
+			read -r -p "Your OS version doesn't support the required Python versions. Please update your OS or compile Python 3.12 from source. Should I compile Python for you? (Y/N): " response
+			response=${response^^}
 
-		tar -xf Python-3.12.1.tgz
-		cd Python-3.12.1
-		sudo ./configure --enable-optimizations
-		sudo make altinstall
-		cd ..
-		printf "\n\n[+]: Creating virtual environment..."
-		python3.12 -m venv Augur_v.0.0.0-venv
-		echo "[+]: Done"
+			if [[ "$response" == "Y" ]]; then
+				echo "Compiling Python3.12... It may take a few minutes."
+				echo ""
+				printf "\n[*]: Installing python3.12\n"
+
+				sudo apt update -y
+				sudo apt upgrade -y
+
+				sudo apt install -y build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm libncurses5-dev libncursesw5 xz-utils tk-dev libffi-dev liblzma-dev python-openssl
+
+				wget https://www.python.org/ftp/python/3.12.1/Python-3.12.1.tgz
+
+				tar -xf Python-3.12.1.tgz
+				cd Python-3.12.1
+				sudo ./configure --enable-optimizations
+				sudo make altinstall
+				cd ..
+			fi
+        fi
+		
+		printf "\n[+]: Creating virtual environment..."
+        "python$PYTHON_VER" -m venv "$PWD/Augur_v.0.0.0-venv"
+        echo "[+]: Done"
 
 		echo "[*]: Activating venv..."
 		source $PWD/Augur_v.0.0.0-venv/bin/activate
@@ -74,7 +95,7 @@ else
 		echo "[+]: Successful installation!"
 
 		echo "[*]: Starting..."
-		python3.12 main.py
+		"python$PYTHON_VER" main.py
 	fi
 fi
 
