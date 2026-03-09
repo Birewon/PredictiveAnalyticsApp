@@ -1,0 +1,5 @@
+Order_ID,Product,Quantity,Price_USD,Tax_Rate
+101,Smartphone,2,500,0.13
+102,Laptop,1,1200,0.13
+103,Tablet,5,300,0.13
+104,Headphones,3,50,0.13

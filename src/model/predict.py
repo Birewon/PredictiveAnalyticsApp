@@ -57,9 +57,24 @@ class Model(QObject):
             self.create_formula(self.formula, self.features, self.argument) # CREATE Formula
             df_train = pd.concat([self.y_train, self.X_train], axis=1) # MAKE !TRAIN!
 
-            self.model = smf.ols(self.formula, data=df_train).fit()
+            results = smf.ols(self.formula, data=df_train).fit()
+            self.model = results
+
+            import numpy as np
+            r2 = results.rsquared
+            mse = results.mse_resid
+            rmse = np.sqrt(mse)
+
+            report = ""
+            report += results.summary().as_text() + "\n\n"
+            report += "========== GENERAL METRICS ==========\n"
+            report += f"R-squared: {r2:.4f}\n"
+            report += f"MSE: {mse:.4f}\n"
+            report += f"RMSE: {rmse:.4f}\n"
+            report += "\n\n"
+
             self.save_model.emit(self.model)
-            self.status_update.emit(self.model.summary().as_text())
+            self.status_update.emit(report)
             self.formula_signal.emit(self.formula)
 
             self.finished.emit()
